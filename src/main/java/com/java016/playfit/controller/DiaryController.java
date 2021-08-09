@@ -129,6 +129,7 @@ public class DiaryController {
 			
 		}
 		
+		//如果有要刪除飲食紀錄
 		if(deleteMealHiddenId != null) {
 			for (String id: deleteMealHiddenId) {  
 			    mealService.deleteMeal(Integer.parseInt(id), principal.getName());
