@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+User List Here!
+<div th:if="${!isDiary}">
+	<a th:href="@{/diary_add_update}">新增今天的日記</a>
+</div>
+<div th:if="${isDiary}">
+	<a th:href="@{/diary_add_update}">編輯今天的日記</a>
+</div>
+
+<div th:if="${todayMeals}" th:each="todayMeal: ${todayMeals}" 
+th:utext="${todayMeal.timePeriod.name} + '--' + ${todayMeal.food.name}">
+
+</div>
+
+<div th:each="dailyRecord : ${dailyRecords}">
+    <a th:if="${dailyRecord}" 
+    	th:href="@{/showDailyRecord/{id}(id=${dailyRecord.id})}" 
+    	th:utext="${dailyRecord.createdDate}"> 
+     </a>
+</div>
+
+</body>
+</html>

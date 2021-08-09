@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+User List Here!
+
+
+<div th:each="obj : ${objs}">
+    <p th:if="${obj.avatar}" th:utext="'userId = '+ ${obj.id} 
+     + '<br/>userFullName = ' + ${obj.fullName}
+     + '<br/>userEmail = ' + ${obj.email} 
+     + '<br/>avatarFileName = '+ ${obj.avatar.fileName}
+     "> 
+     </p>
+<!--      <a th:href="@{/showFormforUpdate/{id}(id=${obj.id})}">Update</a> -->
+     <p th:unless="${obj.avatar}" th:utext="'userId = '+ ${obj.id} 
+     + '<br/>userFullName = ' + ${obj.fullName}
+     + '<br/>userEmail = ' + ${obj.email} 
+     + '<br/>avatarFileName = no avatar'
+     "> 
+
+     </p>
+
+	<a th:if= "${#authentication.name == obj.email}" 
+		th:href="@{/showFormForUpdate/{id}(id=${obj.id})}" 
+		th:utext="'更新' + ${obj.email}"></a>
+</div>
+
+</body>
+</html>

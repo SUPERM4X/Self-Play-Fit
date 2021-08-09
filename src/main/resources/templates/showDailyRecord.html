@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+
+
+
+<div th:if="${dailyRecord}" th:utext="'Title:'+${dailyRecord.title} 
+									+ '<br/>Content:' + ${dailyRecord.content}
+									+ '<br/>Kcal Burned:' + ${dailyRecord.kcalBurned}
+									+ '<br/>Kcal Intake:' + ${dailyRecord.kcalIntake}
+									+ '<br/>Date:' + ${dailyRecord.createdDate}">
+</div>
+
+<div th:if="${todayMeals}" th:each="todayMeal: ${todayMeals}" 
+th:utext="${todayMeal.timePeriod.name} + '--' + ${todayMeal.food.name}">
+
+</div>
+
+
+</body>
+</html>
