@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -61,6 +63,20 @@ public class UserServiceImpl implements UserService{
 		}else {
 			throw new RuntimeException("User not found for email :: " + email);
 		}
+	}
+
+	@Override
+	//取得目前登入的用戶名稱
+	public String getCurrentLogInUsername() {
+		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+		String username;
+		if (principal instanceof UserDetails) {
+		  username = ((UserDetails)principal).getUsername();
+		} else {
+		  username = principal.toString();
+		}
+		return username;
 	}
 	
 	

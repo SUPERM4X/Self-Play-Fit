@@ -5,10 +5,12 @@ import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.jca.work.WorkManagerTaskExecutor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,10 +19,14 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.java016.playfit.dao.DailyRecordRepository;
 import com.java016.playfit.model.DailyRecord;
 import com.java016.playfit.model.Food;
 import com.java016.playfit.model.Meal;
@@ -50,31 +56,44 @@ public class DiaryController {
 	FoodService foodService;
 	@Autowired
 	MealService mealService;
+	@Autowired
+	DailyRecordRepository dailyRecordRepo;
 	
-	
+	//修改或新增日記的表單頁面
 	@RequestMapping("/diary_add_update")
 	public ModelAndView diary_add_update(HttpSession session) {
 		ModelAndView mv = new ModelAndView();
 		
-		java.util.Date utilDate = new java.util.Date();
-        java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
-		String email = currentLogInUsername();
+		//登入的使用者帳號(電子信箱)
+		String email = userService.getCurrentLogInUsername();
+		//用帳號抓出此用戶的Entity
 		User user = userService.getUserByEmail(email);
-				
-		
+
+		//抓出今天的日期
+		java.util.Date utilDate = new java.util.Date();
+		//把日期轉成SQL型態的Date
+		java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
+		//取出目前用戶今天的日常紀錄
 		DailyRecord todayDailyRecord = dailyRecordService.getDailyRecordByUserAndDate(user, sqlDate);
-		if(todayDailyRecord != null && todayDailyRecord.getStatus() == 0) {
-			
-		}
+		
+		//如果目前用戶沒有今天的日常紀錄
 		if(todayDailyRecord == null) {
+			//new一個日常紀錄的物件
 			todayDailyRecord = new DailyRecord();
+			//擁有者設為目前用戶
 			todayDailyRecord.setUser(user);
+			//日期設今天
 			todayDailyRecord.setCreatedDate(sqlDate);
+			//狀態設為0
+			todayDailyRecord.setStatus(0);
 		}
-		todayDailyRecord.setStatus(0);
+		//此日常紀錄存在session裡面
 		session.setAttribute("todayDailyRecord", todayDailyRecord);
+		//取出全部的飲食時段
 		List<TimePeriod> timePeriods = timePeriodService.getAllTimePeriod();
+		//取出全部的食物品項
 		List<Food> foods = foodService.getAllFood();
+		//取出今天的日常紀錄裡的所有飲食紀錄
 		List<Meal> meals = todayDailyRecord.getMeals();
 		
 		mv.addObject("meals", meals);
@@ -92,13 +111,13 @@ public class DiaryController {
 									,Principal principal) {
 		
 		DailyRecord tempTodayDailyRecord = (DailyRecord) session.getAttribute("todayDailyRecord");
-		todayDailyRecord.setId(tempTodayDailyRecord.getId());
-		todayDailyRecord.setUser(tempTodayDailyRecord.getUser());
-		todayDailyRecord.setStatus(1);
-		todayDailyRecord.setCreatedDate(tempTodayDailyRecord.getCreatedDate());
+		tempTodayDailyRecord.setTitle(todayDailyRecord.getTitle());
+		tempTodayDailyRecord.setContent(todayDailyRecord.getContent());
+		tempTodayDailyRecord.setStatus(1);
+
 		
 		session.removeAttribute("todayDailyRecord");
-		dailyRecordService.saveDailyRecord(todayDailyRecord);
+		dailyRecordService.saveDailyRecord(tempTodayDailyRecord);
 		
 		
 		
@@ -118,7 +137,7 @@ public class DiaryController {
 				TimePeriod timePeriod = timePeriodService.getTimePeriodById(Integer.parseInt(s[0]));
 				Food food = foodService.getFoodById(Integer.parseInt(s[1]));
 				Meal meal = new Meal();
-				meal.setDailyRecord(todayDailyRecord);
+				meal.setDailyRecord(tempTodayDailyRecord);
 				meal.setFood(food);
 				meal.setTimePeriod(timePeriod);
 				meal.setQuantity(1);
@@ -129,50 +148,62 @@ public class DiaryController {
 			
 		}
 		
+		System.out.println("------------Start------------");
 		//如果有要刪除飲食紀錄
 		if(deleteMealHiddenId != null) {
 			for (String id: deleteMealHiddenId) {  
 			    mealService.deleteMeal(Integer.parseInt(id), principal.getName());
 			}
 		}
+		System.out.println("------------End------------");
+		
+		dailyRecordService.updateDailyRecordKcalIntakeById(tempTodayDailyRecord);
 		
 		return "redirect:/index";
 	}
 	
+	//日記的首頁
 	@RequestMapping("/diary_check")
 	public ModelAndView diary_check() {
 
 		ModelAndView mv = new ModelAndView();
 		
-		java.util.Date utilDate = new java.util.Date();
-        java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
-		String email = currentLogInUsername();
+		//登入的使用者帳號(電子信箱)
+		String email = userService.getCurrentLogInUsername();
+		//用帳號抓出此用戶的Entity
 		User user = userService.getUserByEmail(email);
 
-		
-		
+		//抓出今天的日期
+		java.util.Date utilDate = new java.util.Date();
+		//把日期轉成SQL型態的Date
+        java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
+        //取出目前用戶今天的日常紀錄
 		DailyRecord todayDailyRecord = dailyRecordService.getDailyRecordByUserAndDate(user, sqlDate);
+		
+		//用戶今天的日常紀錄是否已經成為日記
+		boolean isDiary = true;
+
+		//如果今天的日常紀錄Status欄位為0的話，代表此日常紀錄不為日記
+		if(todayDailyRecord != null && todayDailyRecord.getStatus() == 0) {
+			//設成否
+			isDiary = false;
+
+		}//或是根本沒有抓到今天的日常紀錄
+		if(todayDailyRecord == null) {
+			//設成否
+			isDiary = false;
+		}
+		
+		//取出目前用戶全部的日常紀錄
 		List<DailyRecord> dailyRecords = dailyRecordService.getAllDailyRecordByUser(user);
 
-		boolean isDiary = true;
-		List<Meal> todayMeals = null;
-		if(todayDailyRecord != null && todayDailyRecord.getStatus() == 0) {
-			isDiary = false;
-			todayMeals = todayDailyRecord.getMeals();
-		}
-		if(todayDailyRecord == null) {
-			isDiary = false;
-		}
-		
-		System.out.println("todayMeals" + todayMeals);
-		
-		mv.addObject("todayMeals", todayMeals);
 		mv.addObject("isDiary",isDiary);
 		mv.addObject("dailyRecords",dailyRecords);
 		mv.addObject("todayDailyRecord",todayDailyRecord);
 		mv.setViewName("diary");
 		return mv;
 	}
+	//某一天的日記頁面
 	@GetMapping("/showDailyRecord/{id}")
 	public ModelAndView showDailyRecord(@PathVariable(value = "id") int id, Principal principal, HttpSession session) {
 		ModelAndView mv = new ModelAndView();
@@ -183,6 +214,20 @@ public class DiaryController {
 		mv.setViewName("showDailyRecord");
 		return mv;
 	}
+	
+	@GetMapping(value = "/test")
+	  public ModelAndView index(ModelAndView mv) {
+	    mv.setViewName("test");
+	    return mv;
+	  }
+	
+	@RequestMapping("/jsTest")
+    public @ResponseBody Map<String, Object> jsTest(@RequestBody  Map<String, Object> json) {
+		System.out.println("Controller jsonTest Started");
+		System.out.println(json.get("timePeriod"));
+		System.out.println(json.get("food"));
+        return json;
+    }
 	
 	//取得目前登入的用戶名稱
 	public String currentLogInUsername() {

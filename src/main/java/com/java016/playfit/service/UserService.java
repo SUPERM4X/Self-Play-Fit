@@ -10,4 +10,5 @@ public interface UserService {
 	User getUserById(int id);
 	User getUserByEmail(String email);
 	void updateUserName(int id,String fullName);
+	String getCurrentLogInUsername();
 }

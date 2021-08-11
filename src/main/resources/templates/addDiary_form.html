@@ -6,9 +6,10 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="/css/addDiary_form.css">
     <script type="text/javascript" src="/js/addDiary_form.js"></script>
-
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   </head>
   <body>
+  <div id="sFromResponse"></div>
     <div class="testbox">
       <form th:action="@{/processDiaryUpdate}" th:object="${todayDailyRecord}" method="post">
         <div class="banner" th:utext="'<h1' + *{user.email} + '</h1>'" >
@@ -37,7 +38,11 @@
         <div class="btn-block">
           <button type="submit">SEND</button>
         </div>
-            <!-- The Modal -->
+		
+		<input type="hidden" name="mealHidden" value="last">
+      </form>
+    </div>
+                <!-- The Modal -->
 		<div id="myModal" class="modal">
 		  <!-- Modal content -->
 		  <div class="modal-content">
@@ -48,11 +53,12 @@
           	<select id="myFood">
             <option th:each="food : ${foods}" th:value="${food.id}" th:utext="${food.name}">
           	</select>
+          	<form>
 		    <button type="button" id="addFoodBtn">Add!</button>
+		    </form>
 		  </div>
 		</div>
-		<input type="hidden" name="mealHidden" value="last">
-      </form>
-    </div>
   </body>
+  <meta th:name="_csrf" th:content="${_csrf.token}"/>
+  <meta th:name="_csrf_header" th:content="${_csrf.headerName}"/>
 </html>

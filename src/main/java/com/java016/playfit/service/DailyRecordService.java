@@ -12,4 +12,5 @@ public interface DailyRecordService {
 	DailyRecord getDailyRecordByUserAndDate(User user,Date date);
 	void saveDailyRecord(DailyRecord dailyRecord);
 	DailyRecord getDailyRecordByIdWithUserCheck(int id, String username);
+	void updateDailyRecordKcalIntakeById(DailyRecord dailyRecord);
 }

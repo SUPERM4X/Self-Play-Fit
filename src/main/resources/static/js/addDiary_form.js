@@ -1,4 +1,5 @@
 window.onload = function () {
+	
 	var modal = document.getElementById("myModal");
 	
 	var span = document.getElementsByClassName("close")[0];
@@ -57,6 +58,37 @@ window.onload = function () {
 		});
 		
 		modal.style.display = "none";
+		
+		var p = myTimePeriod.options[myTimePeriod.selectedIndex].text;
+		var f = myFood.options[myFood.selectedIndex].text;
+		var json = { "timePeriod" : p , "food" : f };
+		
+	    let token = $("meta[name='_csrf']").attr("content");
+	    let header = $("meta[name='_csrf_header']").attr("content");
+	    $(document).ajaxSend(function(e, xhr, options) {
+	        xhr.setRequestHeader(header, token);
+	    });
+	    
+		$.ajax({
+		    url: "/jsTest",
+		    type: "POST", //send it through POST method
+		    data: JSON.stringify(json),
+		    contentType: "application/json; charset=utf-8",
+		    dataType: "json",
+		    success: function(response) {
+		    	alert("success"); 
+		      	//Do Something on successful Ajax call
+		     	var respContent ="";
+		     	respContent += "<span class='success'>Was created: [";
+           	 	respContent += response.timePeriod + " : ";
+            	respContent += response.food + "]</span>";
+            	$("#sFromResponse").html(respContent);  
+		    },
+		    error: function(xhr) {
+		      alert("fail");
+		  	}
+		 });
+
 	}
 	
 	function removeParent(){
@@ -78,6 +110,10 @@ window.onload = function () {
 	function insertAfter(referenceNode, newNode) {
 	  referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
 	}
+	
+	
+	
+	
 	
 
 }
