@@ -8,5 +8,5 @@ import com.java016.playfit.model.DailyRecord;
 import com.java016.playfit.model.FitAchieve;
 
 public interface FitAchieveRepository extends JpaRepository<FitAchieve, Integer> {
-	List<FitAchieve> findAllByDailyRecord(DailyRecord dailyRecord);
+	List<FitAchieve> findAllByDailyRecordAndStatus(DailyRecord dailyRecord,String status);
 }

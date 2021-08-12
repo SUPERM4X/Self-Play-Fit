@@ -1,6 +1,9 @@
 package com.java016.playfit.serviceimpl;
 
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -13,11 +16,19 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import com.java016.playfit.dao.DailyRecordRepository;
+import com.java016.playfit.dao.FoodRepository;
+import com.java016.playfit.dao.MealRepository;
+import com.java016.playfit.dao.TimePeriodRepository;
 import com.java016.playfit.dao.UserRepository;
 import com.java016.playfit.model.DailyRecord;
+import com.java016.playfit.model.FitAchieve;
+import com.java016.playfit.model.Food;
 import com.java016.playfit.model.Meal;
+import com.java016.playfit.model.TimePeriod;
 import com.java016.playfit.model.User;
 import com.java016.playfit.service.DailyRecordService;
+import com.java016.playfit.service.FitAchieveService;
+import com.java016.playfit.service.MealService;
 
 @Service
 public class DailyRecordServiceImpl implements DailyRecordService {
@@ -28,6 +39,16 @@ public class DailyRecordServiceImpl implements DailyRecordService {
 	DailyRecordRepository dailyRecordRepo;
 	@Autowired
 	UserRepository userRepo;
+	@Autowired
+	MealRepository mealRepo;
+	@Autowired
+	FoodRepository foodRepo;
+	@Autowired
+	TimePeriodRepository timePeriodRepo;
+	@Autowired
+	MealService mealService;
+	@Autowired
+	FitAchieveService fitAchiveService;
 
 	@Override
 	public List<DailyRecord> getAllDailyRecordByUser(User user) {
@@ -67,7 +88,7 @@ public class DailyRecordServiceImpl implements DailyRecordService {
 	}
 
 	@Override
-	public void updateDailyRecordKcalIntakeById(DailyRecord dailyRecord) {
+	public void updateDailyRecordKcalIntake(DailyRecord dailyRecord) {
 		int id = dailyRecord.getId();
 		entityManager.detach(dailyRecord);
 		dailyRecord = dailyRecordRepo.getById(id);
@@ -84,6 +105,67 @@ public class DailyRecordServiceImpl implements DailyRecordService {
 			}
 		}
 		dailyRecord.setKcalIntake(kcal);
+		dailyRecordRepo.save(dailyRecord);
+	}
+
+	@Override
+	public void updateDailyRecordAndMeal(DailyRecord dailyRecord, String[] timePeriodIdsFoodIdsForUpdate,
+			String[] mealIdsForDelete, String username) {
+		//LinkedList才支援remove方法,就算Arrays.asList轉成List也不能用remove方法
+		List<String> timePeriodIdFoodIdList = new LinkedList<String>(Arrays.asList(timePeriodIdsFoodIdsForUpdate));
+		
+	
+		//如果沒有新增任何用餐紀錄 List裡面會是 ["last"]
+		if(timePeriodIdFoodIdList.size() == 1) {
+			System.out.println("timePeriodIdFoodIdArray == null");
+		}
+		//如果有新增任何用餐紀錄 假設新增兩組用餐紀錄 List裡面會是 ["時段id,食物id","時段id,食物id","last"]
+		else {
+			System.out.println("timePeriodIdFoodIdArray = " + Arrays.toString(timePeriodIdsFoodIdsForUpdate));
+			//把List的最後面的元素"last"移除 List裡面會變成 ["時段id,食物id","時段id,食物id"]
+			timePeriodIdFoodIdList.remove(timePeriodIdFoodIdList.size()-1);
+			//List裡面會是 ["時段id,食物id","時段id,食物id"]
+			//循環List 每次抓出一組字串 "時段id,食物id"
+			timePeriodIdFoodIdList.forEach(timePeriodIdFoodId -> {
+				// 用split "時段id,食物id" 把時段id與食物id分開
+				String[] s = timePeriodIdFoodId.split(",");
+				//用時段id去資料庫取出時段的Entity
+				TimePeriod timePeriod = timePeriodRepo.findById(Integer.parseInt(s[0]));
+				//用食物id去資料庫取出食物的Entity
+				Food food = foodRepo.findById(Integer.parseInt(s[1]));
+				
+				//new 用餐紀錄的物件
+				//設定時段,設定食物,設定數量
+				Meal meal = new Meal();
+				meal.setDailyRecord(dailyRecord);
+				meal.setFood(food);
+				meal.setTimePeriod(timePeriod);
+				meal.setQuantity(1);
+				// 食物kacal * 數量 = 此次用餐的攝取量
+				int totalKcal = (int) (meal.getQuantity()*food.getKcal());
+				meal.setTotalKcal(totalKcal);
+				//把以上設定存入資料庫
+				mealRepo.save(meal);
+			});
+			
+		}
+		
+		System.out.println("------------Start------------");
+		//如果有要刪除飲食紀錄
+		if(mealIdsForDelete != null) {
+			for (String id: mealIdsForDelete) {  
+			    mealService.deleteMeal(Integer.parseInt(id),username);
+			}
+		}
+		System.out.println("------------End------------");
+		
+	}
+
+	@Override
+	public void updateDailyRecordKcalBurned(DailyRecord dailyRecord,FitAchieve fitAchieve) {
+		int kcal = dailyRecord.getKcalBurned();
+		kcal += fitAchieve.getTotalKcal();
+		dailyRecord.setKcalBurned(kcal);
 		dailyRecordRepo.save(dailyRecord);
 	}
 

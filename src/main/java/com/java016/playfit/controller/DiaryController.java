@@ -28,6 +28,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.java016.playfit.dao.DailyRecordRepository;
 import com.java016.playfit.model.DailyRecord;
+import com.java016.playfit.model.FitAchieve;
 import com.java016.playfit.model.Food;
 import com.java016.playfit.model.Meal;
 import com.java016.playfit.model.TimePeriod;
@@ -75,7 +76,7 @@ public class DiaryController {
 		java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
 		//取出目前用戶今天的日常紀錄
 		DailyRecord todayDailyRecord = dailyRecordService.getDailyRecordByUserAndDate(user, sqlDate);
-		
+		List<FitAchieve> fitAchieves = null;
 		//如果目前用戶沒有今天的日常紀錄
 		if(todayDailyRecord == null) {
 			//new一個日常紀錄的物件
@@ -87,6 +88,10 @@ public class DiaryController {
 			//狀態設為0
 			todayDailyRecord.setStatus(0);
 		}
+		else {
+			fitAchieves = fitAchieveService.getAllFitAchieveByDailyRecordAndStatus(todayDailyRecord, "按計畫執行");
+		}
+		System.out.println(fitAchieves);
 		//此日常紀錄存在session裡面
 		session.setAttribute("todayDailyRecord", todayDailyRecord);
 		//取出全部的飲食時段
@@ -96,6 +101,7 @@ public class DiaryController {
 		//取出今天的日常紀錄裡的所有飲食紀錄
 		List<Meal> meals = todayDailyRecord.getMeals();
 		
+		mv.addObject("fitAchieves",fitAchieves);
 		mv.addObject("meals", meals);
 		mv.addObject("foods",foods);
 		mv.addObject("todayDailyRecord",todayDailyRecord);
@@ -105,8 +111,8 @@ public class DiaryController {
 	}
 	
 	@PostMapping("/processDiaryUpdate")
-	public String processDiaryUpdate(@RequestParam(required=false,name="mealHidden") String[] timePeriodIdFoodIdArray
-									,@RequestParam(required=false,name="deleteMealHidden") String[]	deleteMealHiddenId
+	public String processDiaryUpdate(@RequestParam(required=false,name="mealHidden") String[] timePeriodIdsFoodIdsForUpdate
+									,@RequestParam(required=false,name="deleteMealHidden") String[]	mealIdsForDelete
 									,DailyRecord todayDailyRecord,HttpSession session
 									,Principal principal) {
 		
@@ -117,48 +123,62 @@ public class DiaryController {
 
 		
 		session.removeAttribute("todayDailyRecord");
+		
+		//存成日記
 		dailyRecordService.saveDailyRecord(tempTodayDailyRecord);
+		//新增或刪除用餐紀錄
+		dailyRecordService.updateDailyRecordAndMeal(tempTodayDailyRecord, timePeriodIdsFoodIdsForUpdate, mealIdsForDelete, principal.getName());
 		
+//		//LinkedList才支援remove方法,就算Arrays.asList轉成List也不能用remove方法
+//		List<String> timePeriodIdFoodIdList = new LinkedList<String>(Arrays.asList(timePeriodIdFoodIdArray));
+//		
+//	
+//		//如果沒有新增任何用餐紀錄 List裡面會是 ["last"]
+//		if(timePeriodIdFoodIdList.size() == 1) {
+//			System.out.println("timePeriodIdFoodIdArray == null");
+//		}
+//		//如果有新增任何用餐紀錄 假設新增兩組用餐紀錄 List裡面會是 ["時段id,食物id","時段id,食物id","last"]
+//		else {
+//			System.out.println("timePeriodIdFoodIdArray = " + Arrays.toString(timePeriodIdFoodIdArray));
+//			//把List的最後面的元素"last"移除 List裡面會變成 ["時段id,食物id","時段id,食物id"]
+//			timePeriodIdFoodIdList.remove(timePeriodIdFoodIdList.size()-1);
+//			//List裡面會是 ["時段id,食物id","時段id,食物id"]
+//			//循環List 每次抓出一組字串 "時段id,食物id"
+//			timePeriodIdFoodIdList.forEach(timePeriodIdFoodId -> {
+//				// 用split "時段id,食物id" 把時段id與食物id分開
+//				String[] s = timePeriodIdFoodId.split(",");
+//				//用時段id去資料庫取出時段的Entity
+//				TimePeriod timePeriod = timePeriodService.getTimePeriodById(Integer.parseInt(s[0]));
+//				//用食物id去資料庫取出食物的Entity
+//				Food food = foodService.getFoodById(Integer.parseInt(s[1]));
+//				
+//				//new 用餐紀錄的物件
+//				//設定時段,設定食物,設定數量
+//				Meal meal = new Meal();
+//				meal.setDailyRecord(tempTodayDailyRecord);
+//				meal.setFood(food);
+//				meal.setTimePeriod(timePeriod);
+//				meal.setQuantity(1);
+//				// 食物kacal * 數量 = 此次用餐的攝取量
+//				int totalKcal = (int) (meal.getQuantity()*food.getKcal());
+//				meal.setTotalKcal(totalKcal);
+//				//把以上設定存入資料庫
+//				mealService.saveMeal(meal);
+//			});
+//			
+//		}
+//		
+//		System.out.println("------------Start------------");
+//		//如果有要刪除飲食紀錄
+//		if(deleteMealHiddenId != null) {
+//			for (String id: deleteMealHiddenId) {  
+//			    mealService.deleteMeal(Integer.parseInt(id), principal.getName());
+//			}
+//		}
+//		System.out.println("------------End------------");
 		
-		
-		//LinkedList才支援remove方法,就算Arrays.asList轉成List也不能用remove方法
-		List<String> timePeriodIdFoodIdList = new LinkedList<String>(Arrays.asList(timePeriodIdFoodIdArray));
-		
-	
-		//如果沒有新增任何食物
-		if(timePeriodIdFoodIdList.size() == 1) {
-			System.out.println("timePeriodIdFoodIdArray == null");
-		}else {
-			//如果有新增任何食物
-			System.out.println("timePeriodIdFoodIdArray = " + Arrays.toString(timePeriodIdFoodIdArray));
-			timePeriodIdFoodIdList.remove(timePeriodIdFoodIdList.size()-1);
-			timePeriodIdFoodIdList.forEach(timePeriodIdFoodId -> {
-				String[] s = timePeriodIdFoodId.split(",");
-				TimePeriod timePeriod = timePeriodService.getTimePeriodById(Integer.parseInt(s[0]));
-				Food food = foodService.getFoodById(Integer.parseInt(s[1]));
-				Meal meal = new Meal();
-				meal.setDailyRecord(tempTodayDailyRecord);
-				meal.setFood(food);
-				meal.setTimePeriod(timePeriod);
-				meal.setQuantity(1);
-				int totalKcal = (int) (meal.getQuantity()*food.getKcal());
-				meal.setTotalKcal(totalKcal);
-				mealService.saveMeal(meal);
-			});
-			
-		}
-		
-		System.out.println("------------Start------------");
-		//如果有要刪除飲食紀錄
-		if(deleteMealHiddenId != null) {
-			for (String id: deleteMealHiddenId) {  
-			    mealService.deleteMeal(Integer.parseInt(id), principal.getName());
-			}
-		}
-		System.out.println("------------End------------");
-		
-		dailyRecordService.updateDailyRecordKcalIntakeById(tempTodayDailyRecord);
-		
+		//因為可能會新增或刪除用餐紀錄 所以要更新日常紀錄的卡路里
+		dailyRecordService.updateDailyRecordKcalIntake(tempTodayDailyRecord);
 		return "redirect:/index";
 	}
 	
@@ -209,12 +229,14 @@ public class DiaryController {
 		ModelAndView mv = new ModelAndView();
 		DailyRecord dailyRecord = dailyRecordService.getDailyRecordByIdWithUserCheck(id, principal.getName());
 		List<Meal> todayMeals = dailyRecord.getMeals();
+		List<FitAchieve> fitAchieves = fitAchieveService.getAllFitAchieveByDailyRecordAndStatus(dailyRecord, "按計畫執行");
+		mv.addObject("fitAchieves",fitAchieves);
 		mv.addObject("dailyRecord", dailyRecord);
 		mv.addObject("todayMeals", todayMeals);
 		mv.setViewName("showDailyRecord");
 		return mv;
 	}
-	
+	 
 	@GetMapping(value = "/test")
 	  public ModelAndView index(ModelAndView mv) {
 	    mv.setViewName("test");

@@ -17,9 +17,9 @@ public class FitAchieveServiceImpl implements FitAchieveService{
 	FitAchieveRepository FitAchieveRepo;
 	
 	@Override
-	public List<FitAchieve> getAllFitAchieveByDailyRecord(DailyRecord dailyRecord) {
+	public List<FitAchieve> getAllFitAchieveByDailyRecordAndStatus(DailyRecord dailyRecord,String status) {
 
-		return FitAchieveRepo.findAllByDailyRecord(dailyRecord);
+		return FitAchieveRepo.findAllByDailyRecordAndStatus(dailyRecord, status);
 	}
 
 }

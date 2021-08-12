@@ -24,7 +24,7 @@ public class FitActivity {
 	@Column(name="body_part")
 	private String bodyPart;
 
-	private int description;
+	private String description;
 
 	@Column(name="kcal_burn")
 	private float kcalBurn;
@@ -62,11 +62,11 @@ public class FitActivity {
 		this.bodyPart = bodyPart;
 	}
 
-	public int getDescription() {
+	public String getDescription() {
 		return this.description;
 	}
 
-	public void setDescription(int description) {
+	public void setDescription(String description) {
 		this.description = description;
 	}
 

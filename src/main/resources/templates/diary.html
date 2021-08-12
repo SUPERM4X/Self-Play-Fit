@@ -18,7 +18,7 @@ User List Here!
 <div th:each="dailyRecord : ${dailyRecords}">
     <a th:if="${dailyRecord}" 
     	th:href="@{/showDailyRecord/{id}(id=${dailyRecord.id})}" 
-    	th:utext="${dailyRecord.createdDate}"> 
+    	th:utext="${dailyRecord.createdDate} + '	Title : ' + ${dailyRecord.title}"> 
      </a>
 </div>
 

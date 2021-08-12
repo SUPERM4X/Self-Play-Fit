@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
   <head>
-    <title>Entertainment Booking Form</title>
+    <title>Insert title here</title>
     <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="/css/addDiary_form.css">
@@ -42,6 +42,12 @@
 		<input type="hidden" name="mealHidden" value="last">
       </form>
     </div>
+    	<div>
+    		<h1>Done Today</h1>
+    	</div>
+    	<div th:if="${fitAchieves}" th:each="achieve: ${fitAchieves}" 
+        	th:utext="${achieve.fitActivity.name} + '--' + ${achieve.numberGroups} + '--' + ${achieve.totalKcal}">
+        </div>
                 <!-- The Modal -->
 		<div id="myModal" class="modal">
 		  <!-- Modal content -->
