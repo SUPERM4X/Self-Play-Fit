@@ -1,5 +1,8 @@
 package com.java016.playfit.controller;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.security.Principal;
 import java.util.Arrays;
 import java.util.Enumeration;
@@ -11,8 +14,12 @@ import java.util.function.IntToDoubleFunction;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.jca.work.WorkManagerTaskExecutor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -244,12 +251,7 @@ public class DiaryController {
 		mv.setViewName("showDailyRecord");
 		return mv;
 	}
-	 
-	@GetMapping(value = "/test")
-	  public ModelAndView index(ModelAndView mv) {
-	    mv.setViewName("test");
-	    return mv;
-	  }
+	
 	
 	@RequestMapping("/jsTest")
     public @ResponseBody Map<String, Object> jsTest(@RequestBody  Map<String, Object> json) {
