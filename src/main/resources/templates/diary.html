@@ -5,7 +5,7 @@
 <title>Insert title here</title>
 </head>
 <body>
-User List Here!
+<h1>Dairy</h1>
 <div th:if="${!isDiary}">
 	<a th:href="@{/diary_add_update}">新增今天的日記</a>
 </div>
@@ -21,6 +21,12 @@ User List Here!
     	th:utext="${dailyRecord.createdDate} + '	Title : ' + ${dailyRecord.title}"> 
      </a>
 </div>
-
+<div>
+	Total Items: [[${totalItems}]] - Page [[${currentPage}]] of [[${totalPages}]]
+	&nbsp; - &nbsp;
+	<span th:each="i: ${#numbers.sequence(1,totalPages)}">
+		<a th:href="@{'/diary_homepage/' + ${i}}">[[${i}]]</a> &nbsp;&nbsp;
+	</span>
+</div>
 </body>
 </html>

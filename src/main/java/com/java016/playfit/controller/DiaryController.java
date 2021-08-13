@@ -6,10 +6,12 @@ import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.function.IntToDoubleFunction;
 
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.jca.work.WorkManagerTaskExecutor;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -183,8 +185,8 @@ public class DiaryController {
 	}
 	
 	//日記的首頁
-	@RequestMapping("/diary_check")
-	public ModelAndView diary_check() {
+	@RequestMapping("/diary_homepage/{pageNumber}")
+	public ModelAndView diary_homepage(@PathVariable("pageNumber") int currentPage) {
 
 		ModelAndView mv = new ModelAndView();
 		
@@ -215,8 +217,14 @@ public class DiaryController {
 		}
 		
 		//取出目前用戶全部的日常紀錄
-		List<DailyRecord> dailyRecords = dailyRecordService.getAllDailyRecordByUser(user);
-
+		Page<DailyRecord> page = dailyRecordService.getAllDailyRecordByUserAndPage(user,currentPage);
+		List<DailyRecord> dailyRecords = page.getContent();
+		long totalItems = page.getTotalElements();
+		int totalPages = page.getTotalPages();
+		
+		mv.addObject("currentPage", currentPage);
+		mv.addObject("totalItems", totalItems);
+		mv.addObject("totalPages", totalPages);
 		mv.addObject("isDiary",isDiary);
 		mv.addObject("dailyRecords",dailyRecords);
 		mv.addObject("todayDailyRecord",todayDailyRecord);

@@ -69,25 +69,25 @@ window.onload = function () {
 	        xhr.setRequestHeader(header, token);
 	    });
 	    
-		$.ajax({
-		    url: "/jsTest",
-		    type: "POST", //send it through POST method
-		    data: JSON.stringify(json),
-		    contentType: "application/json; charset=utf-8",
-		    dataType: "json",
-		    success: function(response) {
-		    	alert("success"); 
-		      	//Do Something on successful Ajax call
-		     	var respContent ="";
-		     	respContent += "<span class='success'>Was created: [";
-           	 	respContent += response.timePeriod + " : ";
-            	respContent += response.food + "]</span>";
-            	$("#sFromResponse").html(respContent);  
-		    },
-		    error: function(xhr) {
-		      alert("fail");
-		  	}
-		 });
+//		$.ajax({
+//		    url: "/jsTest",
+//		    type: "POST", //send it through POST method
+//		    data: JSON.stringify(json),
+//		    contentType: "application/json; charset=utf-8",
+//		    dataType: "json",
+//		    success: function(response) {
+//		    	alert("success"); 
+//		      	//Do Something on successful Ajax call
+//		     	var respContent ="";
+//		     	respContent += "<span class='success'>Was created: [";
+//           	 	respContent += response.timePeriod + " : ";
+//            	respContent += response.food + "]</span>";
+//            	$("#sFromResponse").html(respContent);  
+//		    },
+//		    error: function(xhr) {
+//		      alert("fail");
+//		  	}
+//		 });
 
 	}
 	

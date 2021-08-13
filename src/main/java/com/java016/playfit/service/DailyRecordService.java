@@ -4,12 +4,14 @@ package com.java016.playfit.service;
 import java.sql.Date;
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+
 import com.java016.playfit.model.DailyRecord;
 import com.java016.playfit.model.FitAchieve;
 import com.java016.playfit.model.User;
 
 public interface DailyRecordService {
-	List<DailyRecord> getAllDailyRecordByUser(User user);
+	Page<DailyRecord> getAllDailyRecordByUserAndPage(User user,int pageNumber);
 	DailyRecord getDailyRecordByUserAndDate(User user,Date date);
 	void saveDailyRecord(DailyRecord dailyRecord);
 	DailyRecord getDailyRecordByIdWithUserCheck(int id, String username);

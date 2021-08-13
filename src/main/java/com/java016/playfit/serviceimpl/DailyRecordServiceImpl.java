@@ -10,6 +10,10 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -51,10 +55,11 @@ public class DailyRecordServiceImpl implements DailyRecordService {
 	FitAchieveService fitAchiveService;
 
 	@Override
-	public List<DailyRecord> getAllDailyRecordByUser(User user) {
-		List<DailyRecord> dailyRecord = dailyRecordRepo.findAllByUserOrderByCreatedDateDesc(user);
+	public Page<DailyRecord> getAllDailyRecordByUserAndPage(User user,int pageNumber) {
+		Pageable pageable = PageRequest.of(pageNumber-1, 3,Sort.by("createdDate").descending());
+		//List<DailyRecord> dailyRecord = dailyRecordRepo.findAllByUserOrderByCreatedDateDesc(user);
 		
-		return dailyRecord;
+		return dailyRecordRepo.findAllByUser(user, pageable);
 	}
 
 	@Override
