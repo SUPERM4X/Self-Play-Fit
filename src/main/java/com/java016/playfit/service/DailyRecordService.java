@@ -19,4 +19,5 @@ public interface DailyRecordService {
 	void updateDailyRecordAndMeal(DailyRecord dailyRecord,String[] timePeriodIdsFoodIdsForUpdate,
 									String[] mealIdsForDelete,String username);
 	void updateDailyRecordKcalBurned(DailyRecord dailyRecord,FitAchieve fitAchieve);
+	boolean isDailyRecordBecomeDairy(DailyRecord dailyRecord);
 }

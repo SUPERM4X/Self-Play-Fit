@@ -33,7 +33,7 @@ public class FitActivityVideo {
 	@Lob
 	private byte[] video;
 
-	//bi-directional many-to-one association to FitActivity
+	//bi-directional many-to-one association to FitActivityRepository
 	@OneToMany(mappedBy="fitActivityVideo")
 	private List<FitActivity> fitActivities;
 

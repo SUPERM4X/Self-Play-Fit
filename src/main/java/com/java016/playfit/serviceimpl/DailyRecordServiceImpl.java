@@ -174,4 +174,17 @@ public class DailyRecordServiceImpl implements DailyRecordService {
 		dailyRecordRepo.save(dailyRecord);
 	}
 
+	@Override
+	public boolean isDailyRecordBecomeDairy(DailyRecord dailyRecord) {
+		
+		boolean isDiary = false;
+		//如果今天的日常紀錄Status欄位為1的話，代表此日常紀錄為日記
+		if(dailyRecord != null && dailyRecord.getStatus() == 1) {
+			
+			isDiary = true;
+
+		}
+		return isDiary;
+	}
+
 }

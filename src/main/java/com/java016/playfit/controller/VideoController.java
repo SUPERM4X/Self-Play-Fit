@@ -26,7 +26,8 @@ public class VideoController {
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept-Ranges", "bytes");
 		headers.set("Content-Type", "video/mp4");
-		headers.set("Content-Range", "bytes 50-1025/17839845");
+		//headers.set("Content-Range", "bytes 50-1025/17839845");
+		headers.set("Content-Range", "bytes 50-1025/178398");
 		headers.set("Content-Length", String.valueOf(file.length()));
 		System.out.println("Video Controller Processed");
 		System.out.println("Video Id = " + id);

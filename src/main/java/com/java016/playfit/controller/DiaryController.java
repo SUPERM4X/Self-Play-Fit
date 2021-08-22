@@ -26,6 +26,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -98,6 +99,7 @@ public class DiaryController {
 			todayDailyRecord.setStatus(0);
 		}
 		else {
+			//按計畫執行完成的運動項目
 			fitAchieves = fitAchieveService.getAllFitAchieveByDailyRecordAndStatus(todayDailyRecord, "按計畫執行");
 		}
 		System.out.println(fitAchieves);
@@ -138,53 +140,6 @@ public class DiaryController {
 		//新增或刪除用餐紀錄
 		dailyRecordService.updateDailyRecordAndMeal(tempTodayDailyRecord, timePeriodIdsFoodIdsForUpdate, mealIdsForDelete, principal.getName());
 		
-//		//LinkedList才支援remove方法,就算Arrays.asList轉成List也不能用remove方法
-//		List<String> timePeriodIdFoodIdList = new LinkedList<String>(Arrays.asList(timePeriodIdFoodIdArray));
-//		
-//	
-//		//如果沒有新增任何用餐紀錄 List裡面會是 ["last"]
-//		if(timePeriodIdFoodIdList.size() == 1) {
-//			System.out.println("timePeriodIdFoodIdArray == null");
-//		}
-//		//如果有新增任何用餐紀錄 假設新增兩組用餐紀錄 List裡面會是 ["時段id,食物id","時段id,食物id","last"]
-//		else {
-//			System.out.println("timePeriodIdFoodIdArray = " + Arrays.toString(timePeriodIdFoodIdArray));
-//			//把List的最後面的元素"last"移除 List裡面會變成 ["時段id,食物id","時段id,食物id"]
-//			timePeriodIdFoodIdList.remove(timePeriodIdFoodIdList.size()-1);
-//			//List裡面會是 ["時段id,食物id","時段id,食物id"]
-//			//循環List 每次抓出一組字串 "時段id,食物id"
-//			timePeriodIdFoodIdList.forEach(timePeriodIdFoodId -> {
-//				// 用split "時段id,食物id" 把時段id與食物id分開
-//				String[] s = timePeriodIdFoodId.split(",");
-//				//用時段id去資料庫取出時段的Entity
-//				TimePeriod timePeriod = timePeriodService.getTimePeriodById(Integer.parseInt(s[0]));
-//				//用食物id去資料庫取出食物的Entity
-//				Food food = foodService.getFoodById(Integer.parseInt(s[1]));
-//				
-//				//new 用餐紀錄的物件
-//				//設定時段,設定食物,設定數量
-//				Meal meal = new Meal();
-//				meal.setDailyRecord(tempTodayDailyRecord);
-//				meal.setFood(food);
-//				meal.setTimePeriod(timePeriod);
-//				meal.setQuantity(1);
-//				// 食物kacal * 數量 = 此次用餐的攝取量
-//				int totalKcal = (int) (meal.getQuantity()*food.getKcal());
-//				meal.setTotalKcal(totalKcal);
-//				//把以上設定存入資料庫
-//				mealService.saveMeal(meal);
-//			});
-//			
-//		}
-//		
-//		System.out.println("------------Start------------");
-//		//如果有要刪除飲食紀錄
-//		if(deleteMealHiddenId != null) {
-//			for (String id: deleteMealHiddenId) {  
-//			    mealService.deleteMeal(Integer.parseInt(id), principal.getName());
-//			}
-//		}
-//		System.out.println("------------End------------");
 		
 		//因為可能會新增或刪除用餐紀錄 所以要更新日常紀錄的卡路里
 		dailyRecordService.updateDailyRecordKcalIntake(tempTodayDailyRecord);
@@ -210,18 +165,8 @@ public class DiaryController {
 		DailyRecord todayDailyRecord = dailyRecordService.getDailyRecordByUserAndDate(user, sqlDate);
 		
 		//用戶今天的日常紀錄是否已經成為日記
-		boolean isDiary = true;
+		boolean isDiary = dailyRecordService.isDailyRecordBecomeDairy(todayDailyRecord);
 
-		//如果今天的日常紀錄Status欄位為0的話，代表此日常紀錄不為日記
-		if(todayDailyRecord != null && todayDailyRecord.getStatus() == 0) {
-			//設成否
-			isDiary = false;
-
-		}//或是根本沒有抓到今天的日常紀錄
-		if(todayDailyRecord == null) {
-			//設成否
-			isDiary = false;
-		}
 		
 		//取出目前用戶全部的日常紀錄
 		Page<DailyRecord> page = dailyRecordService.getAllDailyRecordByUserAndPage(user,currentPage);
@@ -287,4 +232,5 @@ public class DiaryController {
 		  System.out.println("name:" + name + ",value:" + value );
 		}
 	}
+	
 }

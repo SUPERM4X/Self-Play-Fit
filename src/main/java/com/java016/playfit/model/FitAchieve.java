@@ -53,7 +53,7 @@ public class FitAchieve {
 	@JoinColumn(name="daily_record_id")
 	private DailyRecord dailyRecord;
 
-	//bi-directional many-to-one association to FitActivity
+	//bi-directional many-to-one association to FitActivityRepository
 	@ManyToOne
 	@JoinColumn(name="fit_activity_id")
 	private FitActivity fitActivity;
