@@ -13,6 +13,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 
 @Entity
 @Table(name="fit_activity")
@@ -28,10 +31,15 @@ public class FitActivity {
 
 	@Column(name="kcal_burn")
 	private float kcalBurn;
+	
+	@Column(name = "image_path")
+	private String imagePath;
 
 	private String name;
 
 	private Time time;
+	
+	
 
 	//bi-directional many-to-one association to FitAchieve
 	@OneToMany(mappedBy="fitActivity")
@@ -77,6 +85,14 @@ public class FitActivity {
 	public void setKcalBurn(float kcalBurn) {
 		this.kcalBurn = kcalBurn;
 	}
+	
+	public String getImagePath() {
+		return imagePath;
+	}
+
+	public void setImagePath(String imagePath) {
+		this.imagePath = imagePath;
+	}
 
 	public String getName() {
 		return this.name;
@@ -94,6 +110,7 @@ public class FitActivity {
 		this.time = time;
 	}
 
+	@JsonIgnore
 	public List<FitAchieve> getFitAchieves() {
 		return this.fitAchieves;
 	}
@@ -116,6 +133,7 @@ public class FitActivity {
 		return fitAchieve;
 	}
 
+	
 	public FitActivityVideo getFitActivityVideo() {
 		return this.fitActivityVideo;
 	}

@@ -12,6 +12,8 @@ import javax.persistence.Lob;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 
 @Entity
 @Table(name="fit_activity_video")
@@ -88,6 +90,7 @@ public class FitActivityVideo {
 		this.video = video;
 	}
 
+	@JsonIgnore
 	public List<FitActivity> getFitActivities() {
 		return this.fitActivities;
 	}

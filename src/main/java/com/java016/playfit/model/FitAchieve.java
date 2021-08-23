@@ -16,6 +16,9 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 
 
 @Entity
@@ -117,6 +120,7 @@ public class FitAchieve {
 		this.totalKcal = totalKcal;
 	}
 
+	
 	public DailyRecord getDailyRecord() {
 		return this.dailyRecord;
 	}
@@ -125,6 +129,7 @@ public class FitAchieve {
 		this.dailyRecord = dailyRecord;
 	}
 
+	
 	public FitActivity getFitActivity() {
 		return this.fitActivity;
 	}
