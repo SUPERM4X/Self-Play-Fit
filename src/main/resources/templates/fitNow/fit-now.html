@@ -8,13 +8,17 @@
     <link rel="stylesheet" href="/css/fit-now.css">
     <script type="text/javascript" src="/js/fit-now.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    
+    
+    
 </head>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100&display=swap');
     </style>
 <body>
     <div class="container">
-        <div class="header"></div>
+        <header th:replace="fragments/header::myHeader">
+        </header>
         <div class="blank"></div>
 
         <div class="content-left">
@@ -23,14 +27,7 @@
         <div class="content-right">
             <div class="nested-grid">
                 <div class="fit-category">ALL TRAINING</div>
-                <!-- <button class="fit-name">Squat</button>
-                <button class="fit-name">Skaters</button>
-                <button class="fit-name">Push-Ups</button>
-                <button class="fit-name">Pullover</button>
-                <button class="fit-name">Sit-ups</button>
-                <button class="fit-name">Burpees</button>
-                <button class="fit-name">Chest Press</button>
-                <button class="fit-name">Plank Jack</button> -->
+
                 <button class="fit-button-left">
                     
                 </button >
@@ -41,7 +38,8 @@
         </div>
         <div class="blank"></div>
     </div>
-    <div class="footer"></div>
+    
+    <footer th:replace="fragments/footer::myFooter"></footer>
 </body>
 <meta th:name="_csrf" th:content="${_csrf.token}"/>
 <meta th:name="_csrf_header" th:content="${_csrf.headerName}"/>
