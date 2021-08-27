@@ -1,7 +1,7 @@
 *{
     font-family: 'Montserrat', sans-serif;
     font-weight :bold;
-    font-size: 20px;
+    font-size: 1rem;
 }
 
 body{
@@ -116,7 +116,7 @@ body{
     cursor: pointer;
 }
 
-.fit-button-left{
+/* .fit-button-left{
     grid-column-start: 1;
     grid-column-end: 2;
     grid-row-start: 6;
@@ -155,6 +155,35 @@ body{
     color: white;
     background-color: rgb(172, 172, 172);
     cursor: pointer;
+} */
+
+
+.fit-button-left{
+    grid-column-start: 1;
+    grid-column-end: 2;
+    grid-row-start: 6;
+    grid-row-end: 7;
+    /* width:5%;
+    height: 25%;
+    border-radius: 50%;
+    background-color: white;
+    justify-self: start; */
+    
+    align-self: center;
+
+}
+
+
+.fit-button-right{
+    grid-column-start: 2;
+    grid-column-end: 3;
+    grid-row-start: 6;
+    grid-row-end: 7;
+
+    
+    align-self: center;
+
+
 }
 
 .blank{
@@ -174,10 +203,27 @@ body{
 }
 
 @media (max-width: 900px){
+    
+    .container{
 
-
-
+        width:900px;
+        
+    }
+    
     .fit-category{
+        font-size: 27px;
+    }
+
+    .fit-name{
+        font-size: 18px;
+    }
+    
+    footer{
+    	width:900px;
+    }
+
+
+    /* .fit-category{
         font-size: 27px;
     }
 
@@ -185,7 +231,7 @@ body{
     
     .fit-name{
         background-color: white;
-        font-size: 15px;
+        font-size: 2vh;
     } 
 
 	.blank{
@@ -231,7 +277,7 @@ body{
         grid-column-start:1; 
         grid-column-end: 1;
         grid-row-start: 10;
-        grid-row-end: 19;
+        grid-row-end: 14;
 
         background-color: rgb(100, 96, 255);
 
@@ -295,6 +341,46 @@ body{
 
     }
 
+    .nested-grid{
+
+        
+        height: 100%;
+        display:grid;
+    
+        grid-template-columns:1fr 1fr;
+        grid-template-rows: 20% repeat(5,15%);
+    
+        grid-row-gap: 10px;
+    
+    } */
+
+}
+
+#arrow-left,
+#arrow-middle,
+#arrow-right{
+    transition: all 0.5s ease;
+}
+
+#svg-arrow-right{
+
+    margin-left: 90%;
+    cursor: pointer;
+    fill: white;
+}
+
+#svg-arrow-left{
+    transform: rotate(180deg); 
+    cursor: pointer;
+    fill: rgb(240, 239, 239);
+}
+
+svg:hover #arrow-left{
+    transform: translateX(25%);
+}
+
+svg:hover #arrow-right{
+    transform: translateX(-26%);
 }
 
 

@@ -4,20 +4,19 @@ window.onload = function () {
 	var fitActivityList = [];
 	var fitActivityGrouped = [];
 	
-    //上一頁按鈕(清單頁)
-    var previousSlideBtn = document.getElementsByClassName("fit-button-left");
+
+    //上一頁按鈕(清單頁)    
+    var previousSlideBtn = document.getElementById("svg-arrow-left");
     //上一頁按鈕點擊事件
-    previousSlideBtn[0].addEventListener("click",function(){
+    previousSlideBtn.addEventListener("click",function(){
         previousSlide();
     });
-
     //下一頁按鈕(清單頁)
-    var nextSlideBtn = document.getElementsByClassName("fit-button-right");
+    var nextSlideBtn = document.getElementById("svg-arrow-right");
     //下一頁按鈕點擊事件
-    nextSlideBtn[0].addEventListener("click",function(){
+    nextSlideBtn.addEventListener("click",function(){
         nextSlide();
     });
-
 
 
 
@@ -98,6 +97,8 @@ window.onload = function () {
     fitNames.forEach(fitName => {
         fitName.addEventListener("click", function() {
             console.log(fitActivityList);
+            
+            //window.location.href=""
         });
     });
 
@@ -138,7 +139,9 @@ window.onload = function () {
             newButton.innerText = fitActivityGrouped[currnetPage-1][i].name;
             newButton.value = fitActivityGrouped[currnetPage-1][i].id;
             newButton.addEventListener("click",function(){
-                alert(this.value);
+                //alert(this.value);
+                window.location.href="/fit-activity/" + this.value + "/" + this.innerText;
+                console.log(contextPath);
             });
             insertAfter(newButton, fitCategory);
         }

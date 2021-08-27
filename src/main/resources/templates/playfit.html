@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Play Fit</title>
+</head>
+<body>
+    <video src="/video/1/push-up" width="50%" id="myVideo" controls>
+
+      </video>
+      
+      <script type='text/javascript'>
+          document.getElementById('myVideo').addEventListener('ended',myHandler,false);
+          function myHandler(e) {
+              // What you want to do after the event
+              alert("end video");
+          }
+      </script>
+</body>
+</html>

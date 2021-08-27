@@ -162,18 +162,19 @@ public class DiaryController {
 		//把日期轉成SQL型態的Date
         java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
         //取出目前用戶今天的日常紀錄
+        System.out.println("錯誤16");
 		DailyRecord todayDailyRecord = dailyRecordService.getDailyRecordByUserAndDate(user, sqlDate);
-		
+		System.out.println("錯誤166");
 		//用戶今天的日常紀錄是否已經成為日記
 		boolean isDiary = dailyRecordService.isDailyRecordBecomeDairy(todayDailyRecord);
 
-		
+		System.out.println("錯誤170");
 		//取出目前用戶全部的日常紀錄
 		Page<DailyRecord> page = dailyRecordService.getAllDailyRecordByUserAndPage(user,currentPage);
 		List<DailyRecord> dailyRecords = page.getContent();
 		long totalItems = page.getTotalElements();
 		int totalPages = page.getTotalPages();
-		
+		System.out.println("錯誤176 ");
 		mv.addObject("currentPage", currentPage);
 		mv.addObject("totalItems", totalItems);
 		mv.addObject("totalPages", totalPages);

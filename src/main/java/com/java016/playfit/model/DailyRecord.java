@@ -29,10 +29,10 @@ public class DailyRecord {
 	private Date createdDate;
 
 	@Column(name="kcal_burned")
-	private int kcalBurned;
+	private Integer kcalBurned;
 
 	@Column(name="kcal_intake")
-	private int kcalIntake;
+	private Integer kcalIntake;
 
 	private String title;
 
@@ -76,19 +76,19 @@ public class DailyRecord {
 		this.createdDate = createdDate;
 	}
 
-	public int getKcalBurned() {
+	public Integer getKcalBurned() {
 		return this.kcalBurned;
 	}
 
-	public void setKcalBurned(int kcalBurned) {
+	public void setKcalBurned(Integer kcalBurned) {
 		this.kcalBurned = kcalBurned;
 	}
 
-	public int getKcalIntake() {
+	public Integer getKcalIntake() {
 		return this.kcalIntake;
 	}
 
-	public void setKcalIntake(int kcalIntake) {
+	public void setKcalIntake(Integer kcalIntake) {
 		this.kcalIntake = kcalIntake;
 	}
 
