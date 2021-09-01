@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" href="/css/diary_.css">
+<script type="text/javascript" src="/js/diary_.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+</head>
+<body>
+ 	<!-- <style>
+         @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100&display=swap'); 
+     </style> -->
+	<div class="container">
+		<header th:replace="fragments/header::myHeader"></header>
+		<div class="blank"></div>
+
+		<div th:if="${!isDiary}">
+			<a th:href="@{/diary_add_update}">新增今天的日記</a>
+		</div>
+		<div th:if="${isDiary}">
+			<a th:href="@{/diary_add_update}">編輯今天的日記</a>
+		</div>
+
+		<div class="create-diary-btn" id="create-diary-btn">+</div>
+
+		<div class="diary" th:attr="data-id=${dailyRecord.id}"  th:each="dailyRecord : ${dailyRecords}">
+			<div class="diary-title-container">
+				<span  class="diary-title" th:utext="${dailyRecord.title}"></span>
+			</div>
+			<div class="diary-content" th:text="${dailyRecord.content}">
+				
+			</div>
+			<div class="diary-date" th:text="${dailyRecord.createdDate}"></div>
+		</div>
+
+		<div class="page-container">
+			Total Items: [[${totalItems}]] - Page [[${currentPage}]] of [[${totalPages}]]
+			&nbsp; - &nbsp;
+			<span th:each="i: ${#numbers.sequence(1,totalPages)}">
+				<a th:if="${i != currentPage}" th:href="@{'/diary_homepage/' + ${i}}">[[${i}]]</a> 
+				<span th:unless="${i != currentPage}">[[${i}]]</span>
+				&nbsp;&nbsp;
+			</span>
+		</div>
+
+	</div>
+	
+	<div id="myModal" class="modal">
+		<!-- Modal content -->
+		<div class="modal-content">
+			<div class="modal-diary-top-container">
+				<span class="create-a-diary">Create a Diary</span>
+			</div>
+			<span class="close">&times;</span>
+			<div class="done-today-grid"></div>
+		  	<div class="meal-grid"></div>
+		  	<div class="diary-title-content-grid"></div>
+		  
+		</div>
+	</div>
+	<footer th:replace="fragments/footer::myFooter"></footer>
+
+</body>
+</html>

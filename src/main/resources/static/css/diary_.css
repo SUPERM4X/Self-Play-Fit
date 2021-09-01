@@ -1,0 +1,234 @@
+*{
+    font-family: 'Montserrat', sans-serif;
+    font-weight :bold;
+    font-size: 1rem;
+}
+
+
+body{
+    margin: 0;
+}
+
+.container{
+    /* width:100vm;
+    height: 120vh; */
+
+    display:grid;
+
+    grid-template-columns: 23% 54% 23%;
+    grid-template-rows:200px;
+	/* grid-auto-rows: 270px; */
+	row-gap: 30px;
+
+    
+    box-sizing: border-box;
+}
+
+.container div{
+    padding:0px;
+    
+}
+
+.blank{
+	grid-column-start: 1;
+    grid-column-end: 4;
+    grid-row-start: 1;
+    grid-row-end: 2;
+}
+
+.create-diary-btn{
+
+
+    font-size: 3rem;
+    text-align: center;
+
+
+
+    grid-column-start: 3;
+    grid-column-end: 4;
+    grid-row-start: 1;
+    grid-row-end: 2;
+
+	justify-self: start;
+    align-self: end;
+}
+
+.create-diary-btn:hover{
+	cursor:pointer;
+	font-size: 4rem;
+}
+
+.diary{
+    height: 270px;
+    width: 100%;
+    background-color: rgb(204, 204, 255);
+    border-radius: 25px;
+    grid-column-start: 2;
+    grid-column-end: 3;
+
+    display:grid;
+
+    grid-template-columns: 40% 60%;
+    grid-template-rows:1fr 1fr 1fr 1fr;
+    box-sizing: border-box
+}
+
+.diary:hover{
+	cursor:pointer;
+}
+
+.diary-title-container{
+    grid-column-start: 2;
+    grid-column-end: 3;
+    grid-row-start: 1;
+    grid-row-end: 2;
+    font-size: 3rem;
+    width: 95%;
+	margin-top: 30px;
+    border-bottom: 2px solid rgb(131, 131, 131);
+}
+
+
+.diary-content{
+    grid-column-start: 2;
+    grid-column-end: 3;
+    grid-row-start: 2;
+    grid-row-end: 4;
+    margin-top:20px;
+    width: 95%;
+    font-size: 2rem;
+    
+    text-overflow: ellipsis;
+    overflow: hidden; 
+    /* white-space: nowrap; */
+}
+
+.diary-date{
+    grid-column-start: 1;
+    grid-column-end: 2;
+    grid-row-start: 4;
+    grid-row-end: 5;
+    font-size: 2rem;
+    align-self: center;
+}
+
+.page-container{
+	height: 100px;
+	width: 100%;
+	grid-column-start: 1;
+    grid-column-end: 4;
+    text-align: center;
+}
+
+header{
+    grid-column-start: 1;
+    grid-column-end: 4;
+    grid-row-start: 1;
+    grid-row-end: 2;
+}
+
+footer{
+    grid-column-start: 1;
+    grid-column-end: 4;
+}
+
+
+
+/* The Modal (background) */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    padding-top: 100px; /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+  }
+  
+  /* Modal Content */
+  .modal-content {
+    background-color: rgb(235, 238, 248);
+    margin: auto;
+    border-radius: 25px;
+    width: 60%;
+    height:90%;
+
+    display: grid;
+    grid-template-columns: 0.8fr 1fr 0.1fr;
+    grid-template-rows: 0.8fr 2fr 2.5fr 1fr;
+    row-gap: 30px;
+    column-gap: 20px;
+  }
+  
+  .modal-diary-top-container{
+      grid-column-start: 1;
+      grid-column-end: 4;
+      grid-row-start: 1;
+      grid-row-end: 2;
+
+	  box-shadow: 0 4px 6px -6px #222;
+  }
+
+  .create-a-diary{
+  	  display:table;
+  	  margin:18px auto;
+      font-size: 3rem;
+  }
+
+  /* The Close Button */
+  .close {
+    grid-column-start: 3;
+    grid-column-end: 4;
+    grid-row-start: 1;
+    grid-row-end: 2;
+    margin-top: 20px;
+    align-self: start;
+    color: #aaaaaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+  }
+  
+  .close:hover,
+  .close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  .done-today-grid{
+    margin-left: 20px;
+
+    background-color: rgb(204, 204, 255);
+    border-radius: 25px;
+    grid-column-start: 1;
+    grid-column-end: 2;
+    grid-row-start: 2;
+    grid-row-end: 3;
+  }
+
+  .meal-grid{
+  	margin-right: 20px;
+    background-color: rgb(204, 204, 255);
+    border-radius: 25px;
+    grid-column-start: 2;
+    grid-column-end: 4;
+    grid-row-start: 2;
+    grid-row-end: 3;
+  }
+
+  .diary-title-content-grid{
+    margin-left: 20px;
+    margin-right: 20px;
+    background-color: rgb(204, 204, 255);
+    border-radius: 25px;
+    grid-column-start: 1;
+    grid-column-end: 4;
+    grid-row-start: 3;
+    grid-row-end: 4;
+  }
+  

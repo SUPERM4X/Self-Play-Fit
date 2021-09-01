@@ -23,6 +23,8 @@ public interface DailyRecordRepository extends JpaRepository<DailyRecord, Intege
 	
 	Page<DailyRecord> findAllByUser(User user,Pageable pageable);
 	
+	Page<DailyRecord> findAllByUserAndStatus(User user,Integer status,Pageable pageable);
+	
 	@Query(value = "select * from daily_record d where d.created_date = :date AND d.user_id = :userId", nativeQuery=true)
 	DailyRecord findByUserIdAndDate(@Param("userId")Integer userId,@Param("date")Date date);
 	

@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestHeader;
 
 @Controller
 public class VideoController {
@@ -18,7 +19,8 @@ public class VideoController {
 	@GetMapping("/video/{id}/{filename}")
 	public ResponseEntity <InputStreamResource> 
 	retrieveResource(@PathVariable(value = "id")final String id,
-					@PathVariable(value = "filename")final String filename) throws Exception {
+					@PathVariable(value = "filename")final String filename,
+					@RequestHeader("Range") String range) throws Exception {
 		
 		String path = "C:\\Users\\MSIK\\Videos\\" + filename + ".mp4";
 		File file = new File(path);
@@ -31,6 +33,7 @@ public class VideoController {
 		headers.set("Content-Length", String.valueOf(file.length()));
 		System.out.println("Video Controller Processed");
 		System.out.println("Video Id = " + id);
+		System.out.println("range is bytes() : " + range);
 		return new ResponseEntity<> (new InputStreamResource(inputStream), headers, HttpStatus.OK);
 
 	}

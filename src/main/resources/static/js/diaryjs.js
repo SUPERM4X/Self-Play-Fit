@@ -1,13 +1,32 @@
-window.onload = function () {
-	
-	var modal = document.getElementById("myModal");
+$(document).ready(function(){
+  
+  $(".has_children").click(function(){
+      $(this).addClass("highlight")
+      .children(".ch").show().end()
+      
+      .siblings().removeClass("highlight")
+      .children(".ch").hide(); 
+      
+  });
+
+
+
+
+
+
+
+
+
+
+
+
 	
 	var span = document.getElementsByClassName("close")[0];
+
 	
-	// Get the button that opens the modal
-	var select = document.getElementById("mySelect");
+	var addFoodBtnTemp = document.getElementById("addFoodBtnTemp");
 	
-	
+  var myFood = document.getElementById("myFood");
 	
 	var addFoodBtn = document.getElementById("addFoodBtn");
 	
@@ -18,12 +37,12 @@ window.onload = function () {
 	
 	deleteButtons.forEach(function(deleteButton) {
 	  deleteButton.addEventListener("click", function(){ 
-	  	let hd = document.createElement("input");
-		hd.type = "hidden";
-		hd.setAttribute('name', "deleteMealHidden");
-		hd.value = this.value;
-	  	insertAfter(addFoodBtnTemp, hd);
-	  	this.parentNode.parentNode.removeChild(this.parentNode);
+      let hd = document.createElement("input");
+      hd.type = "hidden";
+      hd.setAttribute('name', "deleteMealHidden");
+      hd.value = this.value;
+      insertAfter(myFood, hd);
+      this.parentNode.parentNode.removeChild(this.parentNode);
 	  });
 	});
 	
@@ -42,7 +61,7 @@ window.onload = function () {
 			
 		
 		hd.value = myTimePeriod.value + ',' + myFood.value;
-		insertAfter(addFoodBtnTemp, el);
+		insertAfter(myFood, el);
 		el.appendChild(hd);
 		
 		let removeParents = document.querySelectorAll("button.removeParent");
@@ -52,45 +71,13 @@ window.onload = function () {
 		  	this.parentNode.parentNode.removeChild(this.parentNode);
 		  });
 		});
-		
-		modal.style.display = "none";
-		
-		var p = myTimePeriod.options[myTimePeriod.selectedIndex].text;
-		var f = myFood.options[myFood.selectedIndex].text;
-		var json = { "timePeriod" : p , "food" : f };
-		
-	    let token = $("meta[name='_csrf']").attr("content");
-	    let header = $("meta[name='_csrf_header']").attr("content");
-	    $(document).ajaxSend(function(e, xhr, options) {
-	        xhr.setRequestHeader(header, token);
-	    });
 	    
 
 	}
 	
-	function removeParent(){
-		alert(this.value);
-	}
-	
-	// When the user clicks on <span> (x), close the modal
-	span.onclick = function() {
-	  modal.style.display = "none";
-	}
-	
-	// When the user clicks anywhere outside of the modal, close it
-	window.onclick = function(event) {
-	  if (event.target == modal) {
-	    modal.style.display = "none";
-	  }
-	}
 	
 	function insertAfter(referenceNode, newNode) {
 	  referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
 	}
-	
-	
-	
-	
-	
-
-}
+    
+});
